@@ -37,7 +37,7 @@ try {
             $Branch->getLocalDirectory()
         );
     } else {
-        chdir($Branch->getLocalDir());
+        chdir($Branch->getLocalDirectory());
 
         $commands[] = 'git pull --depth=1 origin ' . $Branch->getName();
 
