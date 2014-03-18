@@ -39,10 +39,11 @@ try {
     } else {
         chdir($Branch->getLocalDirectory());
 
-        $commands[] = 'git pull --depth=1 origin ' . $Branch->getName();
+        $commands[] = 'git reset --hard';
+        $commands[] = 'git pull origin ' . $Branch->getName();
 
         if ($Branch->getSyncSubmodule()) {
-            $commands = ['git submodule update --init --recursive'];
+            $commands[] = 'git submodule update --init --recursive';
         }
     }
 
