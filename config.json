@@ -1,0 +1,16 @@
+{
+    "repositories": {
+        "17757832": {
+            "remote": "git@github.com:user/repository.git",
+            "security": {
+                "token": "$apr1$CbSyDBe7$YhtNy0AUrSg9yTwfAM6fw"
+            },
+            "branches": {
+                "master": {
+                    "local_dir":        "/var/www/html/project",
+                    "sync_submodule":   false
+                }
+            }
+        }
+    }
+}
