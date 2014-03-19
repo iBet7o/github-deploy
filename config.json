@@ -3,12 +3,14 @@
         "17757832": {
             "remote": "git@github.com:user/repository.git",
             "security": {
-                "token": "$apr1$CbSyDBe7$YhtNy0AUrSg9yTwfAM6fw"
+                "token":        "$apr1$CbSyDBe7$YhtNy0AUrSg9yTwfAM6fw",
+                "backup_dir":   "/tmp/backups/repos"
             },
             "branches": {
-                "master": {
+                "dev": {
                     "local_dir":        "/var/www/html/project",
-                    "sync_submodule":   false
+                    "sync_submodule":   false,
+                    "onDelete":         "backup|remove"
                 }
             }
         }

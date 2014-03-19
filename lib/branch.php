@@ -12,10 +12,13 @@ class Branch
 
     private $_config;
 
-    public function __construct($name, $config = [])
+    private $_repo;
+
+    public function __construct($name, $config = [], $repo)
     {
         $this->_name    = $name;
         $this->_config  = $config;
+        $this->_repo    = $repo;
     }
 
 
@@ -39,5 +42,50 @@ class Branch
     public function getSyncSubmodule()
     {
         return isset($this->_config['sync_submodule'])?: false;
+    }
+
+    public function getOnDeleted()
+    {
+        return isset($this->_config['onDelete']) ?
+            explode('|', $this->_config['onDelete']) : false
+        ;
+    }
+
+
+    /* Methods
+     --------------------------------------*/
+
+    public function isLocalDirectory()
+    {
+        return is_dir($this->getLocalDirectory());
+    }
+
+    public function triggerOnDeleted()
+    {
+        $commands = [];
+        $actions = $this->getOnDeleted();
+
+        if ($this->isLocalDirectory() && is_array($actions)) {
+            foreach ($actions as $action) {
+                switch ($action) {
+                    case 'backup':
+                        $commands[] = sprintf('tar czf %s/%s/%s-%s.tar.gz %s',
+                            $this->_repo->getBackupDirectory(),
+                            $this->_repo->getId(),
+                            $this->getName(),
+                            date('YmdHis'),
+                            $this->getLocalDirectory()
+                        );
+                        break;
+                    case 'remove':
+                        $commands[] = sprintf('rm -rf %s',
+                            $this->getLocalDirectory()
+                        );
+                        break;
+                }
+            }
+        }
+
+        return $commands;
     }
 }
