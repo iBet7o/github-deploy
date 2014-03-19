@@ -27,26 +27,11 @@ try {
     if (true == $data['deleted']) {
         $commands = array_merge($commands, $Branch->triggerOnDeleted());
     } elseif (! $Branch->isLocalDirectory()) {
-        $command = 'git clone --depth=1 --branch=' . $Branch->getName();
-
-        if ($Branch->getSyncSubmodule()) {
-            $command .= ' --recursive';
-        }
-
-        $commands[] = sprintf('%s %s %s',
-            $command,
-            $Repository->getURLRemote(),
-            $Branch->getLocalDirectory()
-        );
+        $commands = array_merge($commands, $Branch->gitClone());
     } else {
         chdir($Branch->getLocalDirectory());
 
-        $commands[] = 'git reset --hard';
-        $commands[] = 'git pull origin ' . $Branch->getName();
-
-        if ($Branch->getSyncSubmodule()) {
-            $commands[] = 'git submodule update --init --recursive';
-        }
+        $commands = array_merge($commands, $Branch->gitPull());
     }
 
     $output = [];

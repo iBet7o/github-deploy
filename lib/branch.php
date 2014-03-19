@@ -88,4 +88,33 @@ class Branch
 
         return $commands;
     }
+
+    public function gitClone()
+    {
+        $command = 'git clone --depth=1 --branch=' . $this->getName();
+
+        if ($this->getSyncSubmodule()) {
+            $command .= ' --recursive';
+        }
+
+        $commands[] = sprintf('%s %s %s',
+            $command,
+            $this->_repo->getURLRemote(),
+            $this->getLocalDirectory()
+        );
+
+        return $commands;
+    }
+
+    public function gitPull()
+    {
+        $commands[] = 'git reset --hard';
+        $commands[] = 'git pull origin ' . $this->getName();
+
+        if ($this->getSyncSubmodule()) {
+            $commands[] = 'git submodule update --init --recursive';
+        }
+
+        return $commands;
+    }
 }
