@@ -39,6 +39,23 @@ class Repository
         return $this->_config['remote'];
     }
 
+    public function getBackupDirectory()
+    {
+        if (! isset($this->_config['security']['backup_dir'])) {
+            throw new Exception(
+                'You need to define the variable "backup_dir" for repository',
+                401
+            );
+        }
+
+        if (! is_dir($this->_config['security']['backup_dir'])) {
+            if (! mkdir($this->_config['security']['backup_dir'] . '/' . $this->getId(), 0777, true)) {
+                throw new InvalidArgumentException('Local backup directory not found', 401);
+            }
+        }
+
+        return $this->_config['security']['backup_dir'];
+    }
 
     /* Methods
      --------------------------------------*/
@@ -68,6 +85,6 @@ class Repository
             throw new InvalidArgumentException('Unknown branch', 404);
         }
 
-        return new Branch($branch, $this->_config['branches'][$branch]);
+        return new Branch($branch, $this->_config['branches'][$branch], $this);
     }
 }

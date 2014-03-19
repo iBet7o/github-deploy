@@ -24,7 +24,9 @@ try {
 
     $Branch = $Repository->getBranch($pushRef[0][2]);
 
-    if (! is_dir($Branch->getLocalDirectory())) {
+    if (true == $data['deleted']) {
+        $commands = array_merge($commands, $Branch->triggerOnDeleted());
+    } elseif (! $Branch->isLocalDirectory()) {
         $command = 'git clone --depth=1 --branch=' . $Branch->getName();
 
         if ($Branch->getSyncSubmodule()) {
